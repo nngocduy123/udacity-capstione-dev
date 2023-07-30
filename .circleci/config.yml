@@ -58,7 +58,9 @@ jobs:
           command: |
             clusterName="capstone-${CIRCLE_WORKFLOW_ID:0:7}"
             eksctl create cluster --name=$clusterName --region=us-east-1 --zones=us-east-1a,us-east-1b
-            curl https://kvdb.io/XLZkyYakZRfDuFTBLKUQk6/clusterName -d $clusterName
+            curl -k https://kvdb.io/${KVDB_BUCKET_ID}/clusterName \
+                                        -u "${KVDB_SECRET_KEY}:" \
+                                        -d $clusterName
 
   deploy-app:
     docker:
@@ -91,7 +93,8 @@ jobs:
       - run:
           name: Deploy to Kubernete cluster
           command: |
-            export clusterName=$(curl --insecure https://kvdb.io/XLZkyYakZRfDuFTBLKUQk6/clusterName)
+            export clusterName=$(curl -k https://kvdb.io/${KVDB_BUCKET_ID}/clusterName \
+                                        -u "${KVDB_SECRET_KEY}:")
             dockerpath="$DOCKER_USER/udacitycapstone:${CIRCLE_WORKFLOW_ID:0:7}"
             aws eks --region us-east-1 update-kubeconfig --name ${clusterName}
             export KUBECONFIG=/home/circleci/.kube/config
@@ -147,7 +150,9 @@ jobs:
             echo "Check if response contain 'Hello World' text to make sure that api is ok"
             if echo $resullt | grep "Hello World"
             then
-              curl https://kvdb.io/XLZkyYakZRfDuFTBLKUQk6/workflowid -d ${CIRCLE_WORKFLOW_ID:0:7}
+              curl -k https://kvdb.io/${KVDB_BUCKET_ID}/clusterName \
+                    -u "${KVDB_SECRET_KEY}:" \
+                    -d ${CIRCLE_WORKFLOW_ID:0:7}
               exit 0
             else
               echo $resullt
@@ -158,7 +163,8 @@ jobs:
           name: Rolling back to previous version
           when: on_fail
           command: |
-            export clusterName=$(curl --insecure https://kvdb.io/XLZkyYakZRfDuFTBLKUQk6/clusterName)
+            export clusterName=$(curl -k https://kvdb.io/${KVDB_BUCKET_ID}/clusterName \
+                          -u "${KVDB_SECRET_KEY}:")
             aws eks --region us-east-1 update-kubeconfig --name ${clusterName}
             export KUBECONFIG=/home/circleci/.kube/config
             kubectl rollout undo deployment/capstone-deployment
