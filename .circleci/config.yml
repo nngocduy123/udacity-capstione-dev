@@ -184,9 +184,9 @@ workflows:
           requires: [build-app]
       - create-kubernetes-cluster:
           requires: [scan-app]
-          filters:
-            branches:
-              only: [dev]
+          # filters:
+          #   branches:
+          #     only: [dev]
       - deploy-app:
           requires: [scan-app, create-kubernetes-cluster]
       - smoke-test:
