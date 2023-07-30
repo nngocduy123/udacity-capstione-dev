@@ -147,8 +147,8 @@ jobs:
             export APP_ENDPOINT=$(cat ~/app-endpoint.txt)
             echo ${APP_ENDPOINT}
             resullt=$(curl ${APP_ENDPOINT})
-            echo "Check if response contain 'Hello World' text to make sure that api is ok"
-            if echo $resullt | grep "Hello World"
+            echo "Check if response contain 'Hi there' text to make sure that api is ok"
+            if echo $resullt | grep "Hi there"
             then
               curl -k https://kvdb.io/${KVDB_BUCKET_ID}/clusterName \
                     -u "${KVDB_SECRET_KEY}:" \
@@ -184,10 +184,7 @@ workflows:
           requires: [build-app]
       - create-kubernetes-cluster:
           requires: [scan-app]
-          # filters:
-          #   branches:
-          #     only: [dev]
       - deploy-app:
-          requires: [scan-app, create-kubernetes-cluster]
+          requires: [create-kubernetes-cluster]
       - smoke-test:
           requires: [deploy-app]
