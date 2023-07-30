@@ -1,1 +1,3 @@
 https://github.com/nngocduy123/udacity-capstione-dev.git
+
+http://ac65a60bd65484af0bdba9810d739092-543563823.us-east-1.elb.amazonaws.com/
