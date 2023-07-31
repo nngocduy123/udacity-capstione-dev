@@ -106,7 +106,7 @@ jobs:
               kubectl expose deployment capstone-deployment --type=LoadBalancer --name=capstoneservice --port=80 --target-port=3000
               sleep 1m
             fi
-
+            kubectl get pod
             kubectl rollout status deployment/capstone-deployment
 
       - run:

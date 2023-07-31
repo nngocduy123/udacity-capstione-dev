@@ -1,9 +1,10 @@
 const http = require('http');
 const port = 3000;
 
-const server = http.createServer((req, res) => {
+const server = http.create Server((req, res)  => {
   res.statusCode = 200;
   const msg = 'Hi there, I am Duy\n'
+
   res.end(msg);
 });
 
