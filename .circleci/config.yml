@@ -108,7 +108,22 @@ jobs:
             fi
 
             kubectl rollout status deployment/capstone-deployment
-
+      - run:
+          name: "Check the nodes"
+          command: |
+            kubectl get nodes
+      - run:
+          name: "Check the deployments"
+          command: |
+            kubectl get deployments
+      - run:
+          name: "Check the pods"
+          command: |
+            kubectl get pods -o wide
+      - run:
+          name: "Check the service"
+          command: |
+            kubectl get service/truonghpd-capstone-service
       - run:
           name: Store app endpoint
           command: |
@@ -158,10 +173,7 @@ jobs:
               echo $resullt
               exit 1
             fi
-      - run:
-          name: "Check the pods"
-          command: |
-            kubectl get pods -o wide
+      
       - run:
           name: Rolling back to previous version
           when: on_fail
